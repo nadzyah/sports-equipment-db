@@ -1,0 +1,84 @@
+erDiagram
+    CATEGORY ||--o{ EQUIPMENT : contains
+    EQUIPMENT ||--o{ ORDERITEM : contains
+    CUSTOMER ||--o{ ORDER : makes
+    ORDER ||--o{ ORDERITEM : contains
+    EQUIPMENT ||--o{ STOCK : tracks
+    STOCK ||--o{ WAREHOUSE : "stored at"
+    WAREHOUSE ||--o{ ADDRESS : "located at"
+    CUSTOMER ||--o{ ADDRESS : has
+
+    CATEGORY {
+        int id PK
+        varchar name
+        text description
+    }
+
+    EQUIPMENT {
+        int id PK
+        int category_id FK
+        int stock_id FK
+        varchar model
+        varchar brand
+        decimal price
+        equipment_status_enum status "('produced', 'discontinued', 'comming_soon')"
+    }
+
+    WAREHOUSE {
+        int id PK
+        varchar name
+        int address_id FK
+        warehouse_status_enum status "('active', 'inactive', 'maintenance')"
+    }
+
+    ADDRESS {
+        int id PK
+        varchar street_line1
+        varchar street_line2
+        varchar city
+        varchar province
+        varchar country
+        varchar postal_code
+    }
+
+    CUSTOMER {
+        int id PK
+        int address_id FK
+        varchar full_name
+        varchar email
+        varchar phone
+        customer_status_enum status "('active', 'inactive', 'blacklisted')"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ORDER {
+        int id PK
+        int customer_id FK
+        int shipping_address_id FK
+        timestamp order_date
+        decimal total_amount
+        order_status_enum status "('pending', 'processing', 'shipped', 'delivered', 'cancelled')"
+        text notes
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ORDERITEM {
+        int id PK
+        int order_id FK
+        int equipment_id FK
+        int quantity
+        decimal unit_price
+        decimal subtotal
+        order_item_status_enum status "('pending', 'shipped', 'delivered', 'returned')"
+    }
+
+    STOCK {
+        int id PK
+        int warehouse_id FK
+        int quantity
+        timestamp last_restock_at
+        timestamp created_at
+        timestamp updated_at
+    }
