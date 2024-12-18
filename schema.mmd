@@ -55,9 +55,6 @@ erDiagram
     ORDER {
         int id PK
         int customer_id FK
-        int shipping_address_id FK
-        timestamp order_date
-        decimal total_amount
         order_status_enum status "('pending', 'processing', 'shipped', 'delivered', 'cancelled')"
         text notes
         timestamp created_at
@@ -65,9 +62,8 @@ erDiagram
     }
 
     ORDERITEM {
-        int id PK
-        int order_id FK
-        int equipment_id FK
+        int order_id PK,FK
+        int equipment_id PK,FK
         int quantity
         decimal unit_price
         decimal subtotal
@@ -78,6 +74,7 @@ erDiagram
         int id PK
         int warehouse_id FK
         int quantity
+        int minimum_order_quantity
         timestamp last_restock_at
         timestamp created_at
         timestamp updated_at
