@@ -3,10 +3,10 @@ erDiagram
     EQUIPMENT ||--o{ ORDERITEM : contains
     CUSTOMER ||--o{ ORDER : makes
     ORDER ||--o{ ORDERITEM : contains
-    EQUIPMENT ||--o{ STOCK : tracks
-    STOCK ||--o{ WAREHOUSE : "stored at"
-    WAREHOUSE ||--o{ ADDRESS : "located at"
-    CUSTOMER ||--o{ ADDRESS : has
+    STOCK ||--o{ EQUIPMENT : tracks
+    WAREHOUSE ||--o{ STOCK : "stored at"
+    ADDRESS ||--o{ WAREHOUSE : "located at"
+    ADDRESS ||--o{ CUSTOMER : has
 
     CATEGORY {
         int id PK
