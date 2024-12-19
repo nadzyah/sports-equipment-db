@@ -3,79 +3,79 @@ erDiagram
     EQUIPMENT ||--o{ ORDERITEM : contains
     CUSTOMER ||--o{ ORDER : makes
     ORDER ||--o{ ORDERITEM : contains
-    STOCK ||--o{ EQUIPMENT : tracks
+    EQUIPMENT ||--o{ STOCK : "available in"
     WAREHOUSE ||--o{ STOCK : "stored at"
     ADDRESS ||--o{ WAREHOUSE : "located at"
     ADDRESS ||--o{ CUSTOMER : has
 
     CATEGORY {
         int id PK
-        varchar name
+        varchar name "NOT NULL"
         text description
     }
 
     EQUIPMENT {
         int id PK
-        int category_id FK
-        int stock_id FK
-        varchar model
-        varchar brand
-        decimal price
-        equipment_status_enum status "('produced', 'discontinued', 'comming_soon')"
+        int category_id FK "NOT NULL"
+        varchar model "NOT NULL"
+        varchar brand "NOT NULL"
+        decimal price "NOT NULL, >= 0"
+        equipment_status_enum status "('produced', 'discontinued', 'coming_soon')"
     }
 
     WAREHOUSE {
         int id PK
-        varchar name
-        int address_id FK
+        varchar name "NOT NULL"
+        int address_id FK "NOT NULL"
         warehouse_status_enum status "('active', 'inactive', 'maintenance')"
     }
 
     ADDRESS {
         int id PK
-        varchar street_line1
+        varchar street_line1 "NOT NULL"
         varchar street_line2
-        varchar city
-        varchar province
-        varchar country
-        varchar postal_code
+        varchar city "NOT NULL"
+        varchar province "NOT NULL"
+        varchar country "NOT NULL"
+        varchar postal_code "NOT NULL"
     }
 
     CUSTOMER {
         int id PK
-        int address_id FK
-        varchar full_name
-        varchar email
+        int address_id FK "ON DELETE SET NULL"
+        varchar full_name "NOT NULL"
+        varchar email "NOT NULL UNIQUE"
         varchar phone
         customer_status_enum status "('active', 'inactive', 'blacklisted')"
-        timestamp created_at
-        timestamp updated_at
+        timestamp created_at "DEFAULT CURRENT TIMESTAMP"
+        timestamp updated_at "DEFAULT CURRENT TIMESTAMP ON UPDATE CURRENT TIMESTAMP"
     }
 
     ORDER {
         int id PK
-        int customer_id FK
+        int customer_id FK "NOT NULL"
         order_status_enum status "('pending', 'processing', 'shipped', 'delivered', 'cancelled')"
         text notes
-        timestamp created_at
-        timestamp updated_at
+        timestamp created_at "DEFAULT CURRENT TIMESTAMP"
+        timestamp updated_at "DEFAULT CURRENT TIMESTAMP ON UPDATE CURRENT TIMESTAMP"
     }
 
     ORDERITEM {
-        int order_id PK,FK
-        int equipment_id PK,FK
-        int quantity
-        decimal unit_price
-        decimal subtotal
+        int order_id PK,FK "NOT NULL ON DELETE CASCADE"
+        int equipment_id PK,FK "NOT NULL ON DELETE CASCADE"
+        int quantity "NOT NULL, > 0"
+        decimal unit_price "NOT NULL, >= 0"
+        decimal subtotal "NOT NULL, >= 0"
         order_item_status_enum status "('pending', 'shipped', 'delivered', 'returned')"
     }
 
     STOCK {
         int id PK
-        int warehouse_id FK
-        int quantity
-        int minimum_order_quantity
-        timestamp last_restock_at
-        timestamp created_at
-        timestamp updated_at
+        int warehouse_id FK "NOT NULL"
+        int equipment_id FK "NOT NULL"
+        int quantity "NOT NULL,  > 0"
+        int minimum_order_quantity "DEFAULT 1, >= 0"
+        timestamp last_restock_at "DEFAULT CURRENT TIMESTAMP"
+        timestamp created_at "DEFAULT CURRENT TIMESTAMP"
+        timestamp updated_at "DEFAULT CURRENT TIMESTAMP ON UPDATE CURRENT TIMESTAMP"
     }
